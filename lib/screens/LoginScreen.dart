@@ -21,7 +21,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // StorageService _service = StorageService();
+  final StorageService _storageService = StorageService();
   final AuthService _authService = AuthService();
   final AuthService _firebaseAuth = AuthService();
   final TextEditingController emailController = TextEditingController();
@@ -70,11 +70,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: "Login",
                     iconData: Icons.login,
                     onPress: () {
-                      // loginWithProvider();
-                      signInWithEmailAndPassword();
-                      // Navigator.pushReplacementNamed(
-                      //     context, Dashboard.routeName,
-                      //     arguments: FormData(emailController.text));
+                      loginWithProvider();         // ---Google Sign In
+                      // signInWithEmailAndPassword();   // ---email sign in
                     },
                   ),
                   const SizedBox(
@@ -103,12 +100,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
   signInWithEmailAndPassword() async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
+      var user = await _firebaseAuth.signInWithEmailAndPassword(
       email: emailController.text,
       password: passwordController.text
       );
+
+      var currentUser = FirebaseAuth.instance.currentUser;
+      
+      // var accessToken = StorageItem("accessToken", user.?.accessToken as String);
+      // await _storageService.saveData(accessToken);
+      // StorageService.saveData();
+
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, Dashboard.routeName);
+      Navigator.pushReplacementNamed(context, Dashboard.routeName, arguments: FormData(emailController.text));
     } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           print('No user found for that email.');
@@ -121,13 +125,15 @@ class _LoginScreenState extends State<LoginScreen> {
   loginWithProvider() async {
     try {
       var user = await _authService.signInWithGoogle();
-      // var accessToken = StorageItem("accessToken", user.credential?.accessToken as String);
-      // await _service.saveData(accessToken);
+      var accessToken = StorageItem("accessToken", user.credential?.accessToken as String);
+      await _storageService.saveData(accessToken);
+
 
       // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(context, Dashboard.routeName);
     } catch(e) {}
   }
+
 
 
 }

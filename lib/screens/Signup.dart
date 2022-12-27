@@ -86,7 +86,7 @@ class _SignupState extends State<Signup> {
                     text: "Signup",
                     iconData: Icons.person_add,
                     onPress: () {
-                      Navigator.pop(context);
+                      signInWithEmail();
                     },
                   ),
                   const SizedBox(
@@ -114,19 +114,22 @@ class _SignupState extends State<Signup> {
     });
   }
 
+
    signInWithEmail() async {
     try {
        final credential = await _firebaseAuth.createUserWithEmailAndPassword(
        email: emailController.text,
        password: passwordController.text,
         );
+        
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, Dashboard.routeName);
       } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
               print('The password provided is too weak.');
           } else if (e.code == 'email-already-in-use') {
               print('The account already exists for that email.');
-          }
+          }  
     } catch (e) {
         print(e);
       }

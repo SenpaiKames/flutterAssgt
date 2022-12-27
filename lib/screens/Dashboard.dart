@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mobdev_app/screens/Settings.dart';
-// import 'package:mobdev_app/arguments/FormData.dart';
+import 'package:mobdev_app/arguments/FormData.dart';
 import 'package:flutter/services.dart';
+import 'package:mobdev_app/services/StorageService.dart';
+import 'package:mobdev_app/models/StorageItem.dart';
+
 
 class Dashboard extends StatefulWidget {
   static String routeName = "/dashboard";
@@ -13,6 +16,8 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
+    // localStorage getItem.token;
+    final StorageService _storageService = StorageService();
     // var formdata = ModalRoute.of(context)!.settings.arguments as FormData;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -48,12 +53,12 @@ class _DashboardState extends State<Dashboard> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: <Widget>[
           Container(
             padding: EdgeInsets.only(top: 50.0, left: 10, right: 10),
             child: Center(
               child: Text(
-                "Hello!",
+                "Hello, !",  //${(formdata.email)}
                 overflow: TextOverflow.clip,
                 style: const TextStyle(
                   fontFamily: 'SoDoSans',
@@ -253,4 +258,12 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+  // localStorage getItem.token;
+  //  loggedIn() async {
+  //   try {
+  //     var accessToken = StorageItem("accessToken", user.credential?.accessToken as String);
+  //     await _storageService.saveData(accessToken);
+
+  //   } catch(e) {}
+  //  }
 }
